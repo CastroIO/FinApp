@@ -2,332 +2,274 @@
 
 ---
 
-## 🎯 Objetivo Geral
+## 1. Regras de Negócio
 
-Implementar um MVP funcional de uma aplicação de gestão financeira pessoal em React Native + Expo, com suporte a múltiplas contas, transações e transferências entre contas, tudo guardado localmente em SQLite.
+### Transações
 
-**Timeline Estimada:** 3 sprints (3-4 semanas)
+| Regra | Descrição |
+|-------|-----------|
+| Valor | Deve ser maior que 0 |
+| Data | Máximo hoje (datas futuras bloqueadas) |
+| Descrição | Máximo 200 caracteres |
+| Transferência | Conta destino deve ser diferente da origem |
 
----
+### Contas
 
-## 📊 Estrutura de Sprints
+| Regra | Descrição |
+|-------|-----------|
+| Nome | Obrigatório, 1-50 caracteres |
+| Saldo inicial | Obrigatório, ≥ 0 |
+| Conta default | "Carteira Principal" criada automaticamente na primeira utilização |
 
-### Sprint 1: Fundações & CRUD Base (1-1.5 semanas)
+### Cálculos
 
-**Objetivo:** Setup do projeto, navegação, e operações básicas de CRUD para contas e transações.
+```
+Saldo de conta = initial_balance + Σ(income) − Σ(expense)
+Saldo total = soma dos saldos de todas as contas ativas
+Transferências mantêm soma total invariável
+```
 
-#### Tarefas
+### Soft Delete
 
-| ID | Tarefa | Estimativa | Prioridade |
-|---|---|---|---|
-| 1.1 | Configurar React Native + Expo com TypeScript | 2h | 🔴 Alta |
-| 1.2 | Setup de navegação (Tab Bar + Stack Navigator) | 3h | 🔴 Alta |
-| 1.3 | Criar estrutura de pastas (features, shared, db) | 1h | 🔴 Alta |
-| 1.4 | Definir tema visual (cores, tipografia, spacing) | 2h | 🟠 Média |
-| 1.5 | Criar componentes shared (Button, Card, Input, Modal) | 4h | 🔴 Alta |
-| 1.6 | Implementar SQLite schema (Account, Transaction, Category) | 3h | 🔴 Alta |
-| 1.7 | Criar AccountRepository (CRUD de contas) | 3h | 🔴 Alta |
-| 1.8 | Criar TransactionRepository (CRUD de transações) | 3h | 🔴 Alta |
-| 1.9 | Criar CategoryRepository (seed de categorias) | 2h | 🔴 Alta |
-| 1.10 | Implementar hook `useAccounts` (listar, criar, editar, deletar) | 2h | 🔴 Alta |
-| 1.11 | Implementar hook `useTransactions` (listar, criar, editar, deletar) | 2h | 🔴 Alta |
-| 1.12 | Criar ecrã Accounts (lista + FAB para criar conta) | 3h | 🔴 Alta |
-| 1.13 | Criar formulário NewAccount (criar conta) | 2h | 🔴 Alta |
-| 1.14 | Criar ecrã Transactions (lista com filtros básicos) | 3h | 🔴 Alta |
-| 1.15 | Criar formulário NewTransaction (criar transação simples) | 3h | 🔴 Alta |
-| 1.16 | Testes: CRUD de contas e transações | 3h | 🟠 Média |
-
-**Total Sprint 1:** ~42 horas
-
-**Entregáveis:**
-- ✅ Navegação funcional (3 tabs)
-- ✅ CRUD de contas (criar, listar, editar, deletar)
-- ✅ CRUD de transações (criar, listar, editar, deletar)
-- ✅ SQLite com dados persistidos
-- ✅ Componentes básicos prontos
+Transações e contas não são removidas fisicamente — são marcadas com `deleted_at`, permitindo undo e mantendo histórico.
 
 ---
 
-### Sprint 2: Transferências, Dashboard & Filtros (1-1.5 semanas)
+## 2. Modelo de Dados
 
-**Objetivo:** Implementar transferências entre contas, dashboard com métricas e filtros avançados.
+### Account
 
-#### Tarefas
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| id | INTEGER PK | Identificador |
+| name | TEXT | Nome da conta |
+| initial_balance | REAL | Saldo de partida |
+| is_default | BOOLEAN | True se for conta default |
+| created_at | TEXT ISO 8601 | Data de criação |
+| deleted_at | TEXT ISO 8601 | Null se ativa |
 
-| ID | Tarefa | Estimativa | Prioridade |
-|---|---|---|---|
-| 2.1 | Implementar lógica de transferências (criar 2 transações ligadas) | 3h | 🔴 Alta |
-| 2.2 | Criar formulário NewTransfer (interface para transferências) | 2h | 🔴 Alta |
-| 2.3 | Integrar transferências no formulário de transações | 2h | 🔴 Alta |
-| 2.4 | Implementar hook `useBalance` (calcular saldo de conta) | 2h | 🔴 Alta |
-| 2.5 | Implementar hook `useTotalBalance` (saldo total) | 1h | 🔴 Alta |
-| 2.6 | Implementar hook `useMonthlySummary` (receitas, despesas, balanço) | 2h | 🔴 Alta |
-| 2.7 | Implementar hook `useMonthlyComparison` (evolução vs mês anterior) | 2h | 🔴 Alta |
-| 2.8 | Implementar hook `useCategoryBreakdown` (despesas por categoria) | 2h | 🔴 Alta |
-| 2.9 | Criar componentes Dashboard (BalanceCard, SummaryCard, ChartCard) | 4h | 🟠 Média |
-| 2.10 | Criar ecrã Dashboard (layout completo com todos os dados) | 3h | 🔴 Alta |
-| 2.11 | Implementar filtros (por data, tipo, conta) no ecrã Transactions | 3h | 🟠 Média |
-| 2.12 | Criar ecrã AccountDetail (com lista de transações filtradas) | 2h | 🔴 Alta |
-| 2.13 | Criar formulário EditAccount (editar nome/saldo inicial) | 2h | 🔴 Alta |
-| 2.14 | Melhorar UX com confirmações de delete, feedback visual | 2h | 🟠 Média |
-| 2.15 | Testes: Transferências, cálculos de saldo, filtros | 3h | 🟠 Média |
+### Transaction
 
-**Total Sprint 2:** ~35 horas
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| id | INTEGER PK | Identificador |
+| account_id | INTEGER FK | Conta associada |
+| category_id | INTEGER FK | Categoria |
+| type | TEXT | expense, income, transfer |
+| amount | REAL | Valor (sempre > 0) |
+| date | TEXT ISO 8601 | Data da operação |
+| description | TEXT | Nota livre |
+| destination_account_id | INTEGER FK | Conta destino (só transfer) |
+| transfer_id | TEXT UUID | Liga duas transações de transferência |
+| created_at | TEXT ISO 8601 | Data de registo |
+| updated_at | TEXT ISO 8601 | Data de atualização |
+| deleted_at | TEXT ISO 8601 | Null se ativa |
 
-**Entregáveis:**
-- ✅ Transferências entre contas totalmente funcionais
-- ✅ Dashboard com métricas completas (saldo, receitas, despesas, balanço, gráfico)
-- ✅ Filtros avançados (data, tipo, conta)
-- ✅ Detalhe de conta com transações filtradas
-- ✅ Edição de contas
+### Category (seed)
 
----
-
-### Sprint 3: Onboarding, Polish & Testes Finais (1-1.5 semanas)
-
-**Objetivo:** Finalizar a aplicação com onboarding, conta default automática, micro-interações e testes completos.
-
-#### Tarefas
-
-| ID | Tarefa | Estimativa | Prioridade |
-|---|---|---|---|
-| 3.1 | Implementar verificação de primeira utilização (localStorage/preferences) | 1h | 🔴 Alta |
-| 3.2 | Criar ecrã Onboarding (2-3 ecrãs explicativos) | 3h | 🟠 Média |
-| 3.3 | Implementar conta default automática ("Carteira Principal") | 1h | 🔴 Alta |
-| 3.4 | Criar empty states para todos os ecrãs | 2h | 🟠 Média |
-| 3.5 | Implementar swipe-to-delete para transações | 2h | 🟠 Média |
-| 3.6 | Adicionar haptic feedback em ações críticas | 1h | 🟠 Média |
-| 3.7 | Implementar animações de transição suave | 2h | 🟠 Média |
-| 3.8 | Implementar undo rápido para delete (toast notification) | 2h | 🟠 Média |
-| 3.9 | Testar responsividade em múltiplos tamanhos de ecrã | 2h | 🟠 Média |
-| 3.10 | Testes end-to-end: fluxo completo (onboarding → criar conta → transação) | 3h | 🔴 Alta |
-| 3.11 | Testes de performance (cálculos com muitas transações) | 2h | 🟠 Média |
-| 3.12 | Bug fixing e refinamento de UX | 4h | 🟠 Média |
-| 3.13 | Documentação de deployment e build | 1h | 🟠 Média |
-| 3.14 | Preparar para production (otimizar bundle, remover logs debug) | 2h | 🟠 Média |
-
-**Total Sprint 3:** ~28 horas
-
-**Entregáveis:**
-- ✅ Onboarding completo (apenas primeira vez)
-- ✅ Conta default automática criada no primeiro acesso
-- ✅ Empty states em todos os ecrãs
-- ✅ Micro-interações (swipe, haptic, animações)
-- ✅ Aplicação pronta para MVP release
-- ✅ Documentação de deployment
+| Nome | Tipo |
+|------|------|
+| Alimentação | expense |
+| Transportes | expense |
+| Habitação | expense |
+| Saúde | expense |
+| Lazer | expense |
+| Educação | both |
+| Vestuário | expense |
+| Subscrições | expense |
+| Salário | income |
+| Outras Receitas | income |
+| Investimentos | both |
+| Outro | both |
 
 ---
 
-## 📋 Detalhamento Técnico por Sprint
+## 3. Estrutura de Pastas
 
-### Sprint 1: Fundações
-
-#### 1.1 - Setup do Projeto
-- Criar novo projeto Expo com `expo init FinApp`
-- Configurar TypeScript
-- Instalar dependências: `@react-navigation/*`, `expo-sqlite`, `zustand` (ou Context API)
-- Setup de ESLint e Prettier
-
-#### 1.2 - Navegação
-- Implementar Bottom Tab Navigator com 3 tabs (Dashboard, Contas, Transações)
-- Cada tab com seu próprio Stack Navigator
-- Suporte a deep linking básico
-
-#### 1.3 - Estrutura de Pastas
 ```
 src/
+├── app/                    # Navegação raiz (tabs, stack)
 ├── features/
+│   ├── onboarding/
 │   ├── dashboard/
 │   ├── accounts/
-│   ├── transactions/
-│   └── onboarding/
+│   └── transactions/
 ├── shared/
-│   ├── components/
-│   ├── hooks/
-│   └── theme/
-├── db/
-│   ├── schema.ts
-│   └── repositories/
-├── utils/
-└── types/
+│   ├── components/         # Button, Card, FAB, Modal, Input, etc.
+│   ├── hooks/              # Hooks genéricos
+│   └── theme/             # Cores, tipografia, spacing
+└── db/
+    ├── schema.ts           # Definição das tabelas
+    ├── migrations.ts      # Seed de categorias
+    └── repositories/      # AccountRepository, TransactionRepository, CategoryRepository
 ```
 
-#### 1.4 - Tema Visual
-- Definir paleta de cores (azul primária, verde receitas, vermelho despesas, cinzento transferências)
-- Tipografia (Roboto/SF Pro Display)
-- Sistema de spacing (8px base)
-- Temas dark/light (seguir preferência do sistema)
+---
 
-#### 1.5 - Componentes Shared
-- `Button` — primário, secundário, outline
-- `Card` — com shadow e padding
-- `Input` — text, number, com validação inline
-- `Select` — dropdown para categorias e contas
-- `Modal` — para confirmações
-- `FAB` — floating action button com ações contextuais
-- `Toast` — notificações temporárias
-
-#### 1.6 - SQLite Schema
-```sql
-CREATE TABLE accounts (
-  id INTEGER PRIMARY KEY,
-  name TEXT NOT NULL,
-  initial_balance REAL NOT NULL,
-  is_default BOOLEAN DEFAULT 0,
-  created_at TEXT NOT NULL,
-  deleted_at TEXT
-);
-
-CREATE TABLE transactions (
-  id INTEGER PRIMARY KEY,
-  account_id INTEGER NOT NULL,
-  category_id INTEGER NOT NULL,
-  type TEXT NOT NULL, -- 'expense', 'income', 'transfer'
-  amount REAL NOT NULL,
-  date TEXT NOT NULL,
-  description TEXT,
-  destination_account_id INTEGER,
-  transfer_id TEXT,
-  created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-  deleted_at TEXT,
-  FOREIGN KEY (account_id) REFERENCES accounts(id),
-  FOREIGN KEY (category_id) REFERENCES categories(id)
-);
-
-CREATE TABLE categories (
-  id INTEGER PRIMARY KEY,
-  name TEXT NOT NULL UNIQUE,
-  type TEXT NOT NULL, -- 'expense', 'income', 'both'
-  icon TEXT,
-  display_order INTEGER
-);
-```
-
-#### 1.7-1.9 - Repositórios
-- `AccountRepository`: create, read, update, delete, list, getBalance
-- `TransactionRepository`: create, read, update, delete, list, listByAccount, getByType
-- `CategoryRepository`: list, seed (pré-definidas)
-
-#### 1.10-1.11 - Custom Hooks
-- `useAccounts()`: retorna lista de contas, funções CRUD
-- `useTransactions()`: retorna lista de transações, funções CRUD
-- Usar Context API ou Zustand para state management
-
-#### 1.12-1.15 - Ecrãs & Formulários
-- Ecrã Accounts: lista com FAB, toque para detalhe
-- Formulário NewAccount: inputs para nome e saldo inicial
-- Ecrã Transactions: lista com filtros básicos (Este mês / Tudo)
-- Formulário NewTransaction: inputs para valor, tipo, data, descrição, categoria, conta
+## 4. Sprints
 
 ---
 
-### Sprint 2: Transferências & Dashboard
+### Sprint 1: Setup + Navegação + Theme
 
-#### 2.1-2.3 - Lógica de Transferências
-- Função que cria 2 transações ligadas (mesmo `transfer_id`)
-- Uma é `expense` na conta origem
-- Uma é `income` na conta destino
-- Validar que conta destino ≠ conta origem
+**Objetivo:** Projeto criado, navegação funcional e tema base definido.
 
-#### 2.4-2.8 - Hooks de Cálculos
-- `useBalance(accountId)`: calcula saldo de uma conta
-- `useTotalBalance()`: soma saldos de todas as contas ativas
-- `useMonthlySummary()`: total receitas, despesas, balanço do mês atual
-- `useMonthlyComparison()`: percentagem de evolução vs mês anterior
-- `useCategoryBreakdown()`: agrupa despesas por categoria, top 5
+| Tarefa | Estimativa |
+|--------|------------|
+| Criar projeto Expo + TypeScript | 2h |
+| Configurar ESLint + Prettier | 1h |
+| Instalar dependências (navigation, sqlite, zustand) | 1h |
+| Setup Bottom Tab Navigator (Dashboard, Contas, Transações) | 3h |
+| Setup Stack Navigators por tab | 2h |
+| Definir tema: cores, tipografia, spacing | 3h |
+| Configurar suporte a dark/light mode | 2h |
+| Verificar build inicial | 1h |
 
-#### 2.9-2.10 - Dashboard
-- BalanceCard: exibe saldo total com mudança de cor (verde/vermelho)
-- SummaryCard: receitas, despesas, balanço do mês
-- ComparisonCard: evolução vs mês anterior em %
-- ChartCard: gráfico de pizza (top 5 categorias)
-- RecentTransactionsCard: últimas 5 transações
-- Ecrã principal: layout com todos os cards
-
-#### 2.11-2.13 - Filtros & Detalhe de Conta
-- Filtros no ecrã Transactions: por data (Este mês / 3 meses / Tudo), tipo, conta
-- Ecrã AccountDetail: nome da conta, saldo, lista de transações, botão editar, botão deletar
-- Formulário EditAccount: editar nome e saldo inicial
-
-#### 2.14 - UX Improvements
-- Modal de confirmação para delete
-- Feedback visual (toast) após ações bem-sucedidas
-- Desabilitar botão enquanto aguarda resposta do banco de dados
-- Indicador de carregamento
-
-#### 2.15 - Testes
-- Testes de cálculo de saldo com múltiplas transações
-- Verificar que transferências mantêm soma total igual
-- Testar filtros (data, tipo, conta)
-- Edge cases (conta vazia, transação futura bloqueada, etc.)
+**Entregáveis:** App compila e navega entre tabs.
 
 ---
 
-### Sprint 3: Onboarding & Polish
+### Sprint 2: SQLite + Repositories
 
-#### 3.1-3.3 - Onboarding & Conta Default
-- Verificar `@react-native-async-storage/async-storage` para persistir "first_time_user"
-- Se primeira vez, mostrar ecrã de onboarding antes da navegação
-- Criar conta default "Carteira Principal" automaticamente
-- Marcar como `is_default = true`
+**Objetivo:** Base de dados configurada e repositories implementados.
 
-#### 3.2 - Ecrã Onboarding
-- Ecrã 1: "Bem-vindo ao FinApp"
-- Ecrã 2: "Gerencie múltiplas contas"
-- Ecrã 3: "Controle suas despesas"
-- Botões de navegação (próximo, ignorar)
-- Animações suaves
+| Tarefa | Estimativa |
+|--------|------------|
+| Criar schema SQLite (accounts, transactions, categories) | 2h |
+| Implementar migrations (seed de categorias) | 1h |
+| Implementar AccountRepository (CRUD completo) | 3h |
+| Implementar TransactionRepository (CRUD completo) | 3h |
+| Implementar CategoryRepository (list, getByType) | 1h |
+| Criar store Zustand com dados carregados do SQLite | 2h |
 
-#### 3.4 - Empty States
-- Quando não há contas: "Crie sua primeira conta"
-- Quando não há transações: "Nenhuma transação registrada"
-- Quando não há dados no dashboard: "Comece adicionando uma transação"
-- Cada empty state com CTA clara (botão FAB destacado)
-
-#### 3.5-3.8 - Micro-interações
-- Swipe-to-delete em linhas de transação
-- Undo toast que aparece por 5s
-- Haptic feedback em: delete, criar, editar
-- Animações de entrada de modal e navegação
-- Loading spinner em operações assíncronas
-
-#### 3.9-3.14 - Testes & Finalização
-- Testar em múltiplos tamanhos de ecrã (iPhone, Android)
-- Verificar performance com muitos dados (1000+ transações)
-- Testes end-to-end: onboarding → criar conta → adicionar transação → ver dashboard
-- Remover logs de debug
-- Otimizar bundle size
-- Documentar como buildar e fazer deploy
+**Entregáveis:** Dados persistidos em SQLite, repositories funcionais.
 
 ---
 
-## 🔄 Fluxo de Desenvolvimento
+### Sprint 3: Componentes Base
 
-### Cada Sprint Segue:
+**Objetivo:** Componentes partilhados prontos para usar.
 
-1. **Kickoff** — review das tarefas, estimativas, dependências
-2. **Desenvolvimento** — implementação das tarefas em paralelo onde possível
-3. **Integração** — merge de features, testes de integração
-4. **QA & Polish** — bug fixes, micro-ajustes, performance
-5. **Retrospectiva** — o que funcionou bem, o que melhorar
+| Tarefa | Estimativa |
+|--------|------------|
+| Button (primário, secundário, outline, loading) | 2h |
+| Card (com shadow e padding) | 1h |
+| Input (text, number, com validação inline) | 2h |
+| Select (dropdown para categorias e contas) | 2h |
+| Modal (confirmações) | 1h |
+| FAB (floating action button) | 1h |
+| Toast (notificações temporárias) | 1h |
+| EmptyState (estado vazio com CTA) | 1h |
+
+**Entregáveis:** Biblioteca de componentes pronta.
 
 ---
 
-## 📦 Dependências Externas
+### Sprint 4: CRUD Contas
 
-### Necessárias (MVP)
+**Objetivo:** Gestão completa de contas funcional.
+
+| Tarefa | Estimativa |
+|--------|------------|
+| Criar ecrã AccountsList | 2h |
+| Criar AccountCard (nome, saldo) | 1h |
+| Criar formulário NewAccount | 2h |
+| Criar formulário EditAccount | 2h |
+| Criar ecrã AccountDetail | 2h |
+| Implementar delete com confirmação | 1h |
+| Hook useAccounts (listar, criar, editar, deletar) | 2h |
+
+**Entregáveis:** Criar, editar, eliminar contas funciona.
+
+---
+
+### Sprint 5: CRUD Transações
+
+**Objetivo:** Gestão completa de transações funcional.
+
+| Tarefa | Estimativa |
+|--------|------------|
+| Criar ecrã TransactionsList | 2h |
+| Criar TransactionCard (valor, tipo, categoria, data) | 1h |
+| Criar formulário NewTransaction | 3h |
+| Criar formulário EditTransaction | 2h |
+| Implementar filtros básicos (Este mês / Tudo) | 2h |
+| Hook useTransactions (listar, criar, editar, deletar) | 2h |
+
+**Entregáveis:** Criar, editar, eliminar transações funciona.
+
+---
+
+### Sprint 6: Transferências + Cálculos
+
+**Objetivo:** Transferências entre contas e hooks de cálculo.
+
+| Tarefa | Estimativa |
+|--------|------------|
+| Implementar lógica de transferência (cria 2 transações ligadas) | 3h |
+| Criar formulário NewTransfer | 2h |
+| Hook useBalance(accountId) | 1h |
+| Hook useTotalBalance() | 1h |
+| Hook useMonthlySummary() | 2h |
+| Hook useMonthlyComparison() | 2h |
+| Hook useCategoryBreakdown() | 2h |
+| Melhorar filtros Transactions (tipo, conta) | 2h |
+
+**Entregáveis:** Transferências funcionam, saldos calculados corretamente.
+
+---
+
+### Sprint 7: Dashboard
+
+**Objetivo:** Dashboard com métricas e gráficos.
+
+| Tarefa | Estimativa |
+|--------|------------|
+| BalanceCard (saldo total) | 1h |
+| SummaryCard (receitas, despesas, balanço mensal) | 2h |
+| ComparisonCard (evolução vs mês anterior %) | 1h |
+| ChartCard (gráfico de pizza - top 5 categorias) | 3h |
+| RecentTransactionsCard (últimas 5 transações) | 2h |
+| Layout completo do ecrã Dashboard | 2h |
+| Conectar todos os hooks ao dashboard | 2h |
+
+**Entregáveis:** Dashboard mostra todas as métricas.
+
+---
+
+### Sprint 8: Onboarding + Polish
+
+**Objetivo:** Finalizar UX e preparação para release.
+
+| Tarefa | Estimativa |
+|--------|------------|
+| Verificar primeira utilização (AsyncStorage) | 1h |
+| Criar ecrã Onboarding (3 ecrãs) | 3h |
+| Criar conta default automática | 1h |
+| Empty states em todos os ecrãs | 2h |
+| Swipe-to-delete para transações | 2h |
+| Undo toast após delete | 2h |
+| Animações de transição | 1h |
+| Testes end-to-end do fluxo completo | 3h |
+
+**Entregáveis:** App pronta para MVP release.
+
+---
+
+## 5. Dependências
+
 ```json
 {
-  "react": "^18.3.1",
-  "react-native": "^0.73.x",
   "expo": "^50.x",
-  "@react-navigation/bottom-tabs": "^6.x",
+  "react-native": "0.73.x",
   "@react-navigation/native": "^6.x",
+  "@react-navigation/bottom-tabs": "^6.x",
   "@react-navigation/stack": "^6.x",
   "expo-sqlite": "^13.x",
   "react-native-gesture-handler": "^2.x",
   "react-native-reanimated": "^3.x",
+  "react-native-safe-area-context": "^4.x",
+  "react-native-screens": "^3.x",
   "@react-native-async-storage/async-storage": "^1.x",
   "zustand": "^4.x",
   "react-native-svg": "^13.x",
@@ -335,47 +277,20 @@ CREATE TABLE categories (
 }
 ```
 
-### Opcionais (para micro-interações)
-- `react-native-haptic-feedback` — feedback tátil
-- `react-native-swiper-list` — swipe-to-delete
-- `react-native-charts-wrapper` — gráficos avançados
-
 ---
 
-## ✅ Critérios de Sucesso do MVP
+## 6. Critérios de Sucesso
 
-- [ ] Criar múltiplas contas
-- [ ] Editar e deletar contas
-- [ ] Criar, editar, deletar transações
-- [ ] Transferências entre contas funcionam corretamente
-- [ ] Saldo calculado corretamente em tempo real
-- [ ] Dashboard mostra métricas do mês atual
-- [ ] Filtros funcionam (data, tipo, conta)
-- [ ] Onboarding exibe apenas primeira vez
+- [ ] CRUD de contas funciona
+- [ ] CRUD de transações funciona
+- [ ] Transferências mantêm soma total correta
+- [ ] Saldos calculados em tempo real
+- [ ] Dashboard mostra métricas corretas
+- [ ] Onboarding aparece apenas na primeira vez
 - [ ] Conta default criada automaticamente
-- [ ] Dados persistem após fechar e reabrir app
-- [ ] Aplicação funciona offline
-- [ ] UI é responsiva (múltiplos tamanhos de ecrã)
-- [ ] Nenhum erro de console ou crash
+- [ ] Dados persistem após fechar app
+- [ ] App funciona offline
 
 ---
 
-## 🚀 Próximos Passos Após MVP
-
-1. **MVP+1:** Backup/export de dados, relatórios, melhorias de UX
-2. **MVP+2:** Autenticação local, sincronização em cloud
-3. **MVP+3:** Metas de poupança, anexo de imagens, categorias personalizadas
-
----
-
-## 📞 Notas Importantes
-
-- **Data Importante:** Datas futuras devem ser bloqueadas (máximo: hoje)
-- **Soft Delete:** Usar `deleted_at` para permitir undo
-- **Cálculos:** Sempre em tempo real, nunca cachear saldos
-- **Testes:** Implementar testes unitários desde o Sprint 1
-- **Git:** Commits pequenos e descritivos
-
----
-
-*Plano de Desenvolvimento — Versão 1.0 (Março 2026)*
+*Plano de Desenvolvimento v2.0 — Refatorado (Março 2026)*
