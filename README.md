@@ -5,23 +5,28 @@
 ## 1. Ideia & Base Original
 
 ### Problema
+
 A maioria das pessoas tem dificuldade em acompanhar e controlar as suas finanças pessoais. Sem uma visão clara das receitas e despesas, torna-se difícil tomar decisões financeiras conscientes, criar hábitos de poupança ou trabalhar em direção a objetivos concretos.
 
 ### Público-Alvo
+
 Pessoas com menor capacidade de organização financeira — desde jovens adultos que estão a gerir o seu primeiro orçamento, até utilizadores que simplesmente nunca encontraram uma ferramenta simples e intuitiva o suficiente para manterem o controlo das suas finanças do dia a dia.
 
 ### Solução
+
 Uma aplicação mobile intuitiva que permite ao utilizador gerir as suas finanças pessoais de forma centralizada. A app suporta a criação de múltiplas contas (por exemplo: conta principal, fundo de férias, poupanças, fundo para compra de carro, entre outras), permitindo uma organização clara e separada de diferentes objetivos financeiros.
 
 ### Funcionalidades Centrais
 
 **Contas**
+
 - Cada conta tem um nome/descrição e um saldo total calculado automaticamente com base nas transações registadas.
 - O utilizador pode criar tantas contas quantas precisar, cada uma representando um propósito financeiro distinto.
 - O utilizador pode editar o nome e saldo inicial de uma conta.
 - O utilizador pode eliminar uma conta (com confirmação).
 
 **Transações**
+
 - Cada transação (despesa, receita ou transferência) contém:
   - **Valor** — montante da operação (sempre positivo)
   - **Tipo** — despesa, receita ou transferência
@@ -35,6 +40,7 @@ Uma aplicação mobile intuitiva que permite ao utilizador gerir as suas finanç
 - As transações futuras são bloqueadas; apenas transações passadas (até hoje) são permitidas.
 
 **Transferências Entre Contas**
+
 - Transferências são um tipo especial de transação que automaticamente:
   - Debitam valor da conta de origem
   - Creditam o mesmo valor na conta de destino
@@ -42,6 +48,7 @@ Uma aplicação mobile intuitiva que permite ao utilizador gerir as suas finanç
   - Mantêm a soma total de dinheiro invariável (apenas movem entre contas)
 
 ### Visão
+
 Tornar a gestão financeira pessoal acessível a qualquer pessoa, independentemente do seu nível de literacia financeira, através de uma experiência simples, clara e motivadora.
 
 ---
@@ -113,6 +120,7 @@ O objetivo do MVP é validar o fluxo central da aplicação: **criar uma conta �
 ## 3. Decisões Técnicas
 
 ### Plataforma
+
 iOS e Android a partir de uma única codebase, compilando para código nativo em ambas as plataformas.
 
 ### Stack
@@ -124,6 +132,7 @@ iOS e Android a partir de uma única codebase, compilando para código nativo em
 | Base de dados | SQLite via `expo-sqlite` | Local, leve, relacional, sem necessidade de internet |
 
 ### Princípios
+
 - **Offline-first** — todos os dados são guardados localmente no dispositivo, sem dependência de servidores externos.
 - **Uma codebase** — o mesmo código serve iOS e Android, reduzindo esforço de manutenção.
 - **Soft delete** — transações e contas deletadas marcam-se com `deleted_at` em vez de serem removidas, permitindo "desfazer" acidental e mantendo histórico.
@@ -133,6 +142,7 @@ iOS e Android a partir de uma única codebase, compilando para código nativo em
 ## 4. Design & UX
 
 ### Identidade Visual
+
 - **Tema:** escuro moderno como base, com suporte a light mode seguindo as preferências do sistema
 - **Paleta:**
   - Azul como cor primária
@@ -145,6 +155,7 @@ iOS e Android a partir de uma única codebase, compilando para código nativo em
 - **Espaçamento:** sistema de 8px; alinhamento rigoroso
 
 ### Navegação
+
 Tab bar em baixo com 3 tabs principais: **Dashboard**, **Contas**, **Transações**.
 
 Um Floating Action Button (FAB) está sempre visível, com ação contextual dependendo do ecrã:
@@ -191,6 +202,7 @@ Tab Bar
 ```
 
 ### Feedback Visual & Micro-interações
+
 - Animação suave quando saldo atualiza
 - Confirmação tátil (haptic feedback) em ações importantes (criar, eliminar)
 - Empty states bem desenhados com mensagens claras e CTAs
@@ -261,6 +273,7 @@ Todas as entidades são guardadas localmente em SQLite. O saldo de uma conta é 
 | Outro | both | Despesas ou receitas que não se encaixam |
 
 ### Notas Futuras
+
 - **Categorias personalizadas** — o campo `type` já suporta esta evolução sem alterações ao schema.
 - **Backup & Export** — versão futura com exportação de dados em CSV/JSON.
 - **Sincronização em Cloud** — autenticação e backup remoto planejado para versão +1.
@@ -270,17 +283,20 @@ Todas as entidades são guardadas localmente em SQLite. O saldo de uma conta é 
 ## 6. Validações & Regras de Negócio
 
 ### Transações
+
 - **Valor:** deve ser maior que 0
 - **Data:** máximo hoje (data futura rejeitada); permite datas passadas
 - **Descrição:** máximo 200 caracteres
 - **Transferências:** requerem conta destino diferente da conta origem
 
 ### Contas
+
 - **Nome:** mínimo 1 caracter, máximo 50 caracteres, obrigatório
 - **Saldo inicial:** não negativo (≥ 0), obrigatório
 - **Conta default:** criada automaticamente no primeiro uso com nome "Carteira Principal"
 
 ### Cálculos
+
 - **Saldo de uma conta:** `initial_balance + Σ (transações income) − Σ (transações expense)` onde transações ativas (não deletadas)
 - **Saldo total:** soma dos saldos de todas as contas ativas
 - **Transferências:** mantêm a soma total de dinheiro invariável (um débito numa conta = crédito noutra)
@@ -290,6 +306,7 @@ Todas as entidades são guardadas localmente em SQLite. O saldo de uma conta é 
 ## 7. Arquitetura do Código
 
 ### Padrão
+
 Feature-based com MVVM simplificado — o código é organizado por funcionalidade, não por tipo de ficheiro. Cada feature é autónoma e contém os seus próprios ecrãs, componentes e lógica. O acesso aos dados é isolado numa camada de repositórios, separando completamente a base de dados da UI.
 
 ### Estrutura de Pastas
@@ -332,6 +349,7 @@ src/
 ```
 
 ### Princípios
+
 - **Feature-first** — cada funcionalidade vive na sua própria pasta, fácil de localizar e expandir
 - **Repositórios** — toda a lógica de acesso à base de dados está isolada em `db/repositories/`, nunca diretamente nos componentes ou ecrãs
 - **Shared** — componentes e utilitários reutilizáveis entre features vivem em `shared/`, evitando duplicação
@@ -343,17 +361,20 @@ src/
 ## 8. Testes & Validação
 
 ### Testes Unitários
+
 - Cálculo de saldo com múltiplas transações (income, expense, transfer)
 - Transferências mantêm soma total igual (origem perde X, destino ganha X)
 - Filtros de data funcionam corretamente (Este mês, últimas 3 meses, tudo)
 - Validação de entrada (valores negativos rejeitados, datas futuras bloqueadas)
 
 ### Testes de Integração
+
 - Criar conta → editar → deletar → verificar dados
 - Criar transação → editar → deletar → verificar saldo
 - Transferência cria 2 transações ligadas corretamente
 
 ### Testes de UX
+
 - Onboarding exibe apenas primeira vez
 - Empty states aparecem corretamente
 - Feedback visual em todas as ações críticas
@@ -364,18 +385,21 @@ src/
 ## 9. Roadmap Futuro (Fora do MVP)
 
 ### MVP+1
+
 - Backup local (exportar para ficheiro JSON/CSV)
 - Importar dados de backup
 - Relatórios mensais/anuais
 - Melhorias visuais baseadas em feedback de utilizadores
 
 ### MVP+2
+
 - Autenticação simples (sem email, apenas local)
 - Sincronização em cloud (opcional)
 - Múltiplos dispositivos
 - Categorias personalizadas
 
 ### MVP+3
+
 - Metas e planos de poupança
 - Anexo de imagens (recibos, faturas)
 - Previsões e tendências
