@@ -3,8 +3,10 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
 import { ThemeContext, LightTheme, DarkTheme } from '../shared/hooks';
 import { useSystemColorScheme } from '../shared/hooks';
+import TabsLayout from './(tabs)/_layout';
 
 export default function RootLayout() {
   const systemScheme = useSystemColorScheme();
@@ -21,14 +23,28 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <ThemeContext.Provider value={theme}>
           <StatusBar style={isDark ? 'light' : 'dark'} />
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              contentStyle: { backgroundColor: theme.colors.background },
+          <NavigationContainer
+            theme={{
+              dark: isDark,
+              colors: {
+                primary: theme.colors.primary,
+                background: theme.colors.background,
+                card: theme.colors.surface,
+                text: theme.colors.text,
+                border: theme.colors.border,
+                notification: theme.colors.primary,
+              },
             }}
           >
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          </Stack>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: theme.colors.background },
+              }}
+            >
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            </Stack>
+          </NavigationContainer>
         </ThemeContext.Provider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
