@@ -29,23 +29,23 @@ Uma aplicação mobile que permite gerir múltiplas contas, registar transaçõe
 
 ## Stack
 
-| Camada | Tecnologia |
-|--------|------------|
-| Mobile | React Native + Expo |
-| Linguagem | TypeScript |
+| Camada        | Tecnologia           |
+| ------------- | -------------------- |
+| Mobile        | React Native + Expo  |
+| Linguagem     | TypeScript           |
 | Base de dados | SQLite (expo-sqlite) |
-| Navegação | React Navigation |
-| Estado | Zustand |
+| Navegação     | React Navigation     |
+| Estado        | Zustand              |
 
 ## Roadmap
 
-| Versão | Funcionalidades |
-|--------|----------------|
-| MVP | Contas, transações, transferências, dashboard |
-| v1.1 | Backup/export, empty states |
-| v1.2 | Categorias personalizadas |
-| v2.0 | Autenticação, sincronização cloud |
+| Versão | Funcionalidades                               |
+| ------ | --------------------------------------------- |
+| MVP    | Contas, transações, transferências, dashboard |
+| v1.1   | Backup/export, empty states                   |
+| v1.2   | Categorias personalizadas                     |
+| v2.0   | Autenticação, sincronização cloud             |
 
 ---
 
-*Desenvolvido com foco em simplicidade e usabilidade.*
+_Desenvolvido com foco em simplicidade e usabilidade._
