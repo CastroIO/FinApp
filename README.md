@@ -12,40 +12,32 @@ Uma aplicação mobile que permite gerir múltiplas contas, registar transaçõe
 
 ## Funcionalidades
 
+- **Dashboard** — Vê saldo total, resumo mensal (receitas e despesas) e evolução vs mês anterior e listagem de transações
 - **Contas múltiplas** — Cria contas para diferentes objetivos (ex: Carteira, Poupanças, Fundo de Férias)
-- **Transações** — Regista despesas e receitas com categoria, data e descrição
-- **Transferências** — Move dinheiro entre contas
-- **Dashboard** — Vê saldo total, resumo mensal e evolução vs mês anterior
-- **Offline-first** — Todos os dados guardados localmente, funciona sem internet
+- **Transações** — Regista despesas e receitas com valor, categoria associada, data, descrição e anexos (opcional)
+- **Transferências** — Mover dinheiro entre contas
+- **Offline-first** — Todos os dados guardados localmente, funciona sem internet e com possibilidade de backup
 
-## Screens
+## Ecrãs
 
 ```
-├── Dashboard        — Saldo total, resumo mensal, gráfico de despesas
-├── Contas           — Lista de contas, criar/editar conta
-├── Transações       — Lista de transações com filtros
 └── Onboarding       — 3 ecrãs explicativos (apenas na primeira vez)
+├── Dashboard        — Saldo total, resumo mensal, gráfico de despesas
+├── Contas/Carteiras — Lista de contas, criar/editar conta
+├── Configurações
+
 ```
 
-## Stack
+## Tecnologias
 
 | Camada | Tecnologia |
 |--------|------------|
 | Mobile | React Native + Expo |
 | Linguagem | TypeScript |
-| Base de dados | SQLite (expo-sqlite) |
-| Navegação | React Navigation |
-| Estado | Zustand |
+| Base de dados | SQLite |
+| Design System/Estilos | por definir
 
-## Roadmap
-
-| Versão | Funcionalidades |
-|--------|----------------|
-| MVP | Contas, transações, transferências, dashboard |
-| v1.1 | Backup/export, empty states |
-| v1.2 | Categorias personalizadas |
-| v2.0 | Autenticação, sincronização cloud |
-
+## Planeamento
 ---
 
 *Desenvolvido com foco em simplicidade e usabilidade.*
