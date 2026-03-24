@@ -110,20 +110,22 @@ src/
 
 ---
 
-### Sprint 1: Setup + Navegação + Theme
+### ✅ Sprint 1: Setup + Navegação + Theme
+
+**Estado:** ✅ Completo (Março 2026)
 
 **Objetivo:** Projeto criado, navegação funcional e tema base definido.
 
-| Tarefa                                                     | Estimativa |
-| ---------------------------------------------------------- | ---------- |
-| Criar projeto Expo + TypeScript                            | 2h         |
-| Configurar ESLint + Prettier                               | 1h         |
-| Instalar dependências (navigation, sqlite, zustand)        | 1h         |
-| Setup Bottom Tab Navigator (Dashboard, Contas, Transações) | 3h         |
-| Setup Stack Navigators por tab                             | 2h         |
-| Definir tema: cores, tipografia, spacing                   | 3h         |
-| Configurar suporte a dark/light mode                       | 2h         |
-| Verificar build inicial                                    | 1h         |
+| Tarefa                                                     | Estimativa | Estado |
+| ---------------------------------------------------------- | ---------- | ------ |
+| Criar projeto Expo + TypeScript                            | 2h         | ✅     |
+| Configurar ESLint + Prettier                               | 1h         | ✅     |
+| Instalar dependências (navigation, sqlite, zustand)        | 1h         | ✅     |
+| Setup Bottom Tab Navigator (Dashboard, Contas, Transações) | 3h         | ✅     |
+| Setup Stack Navigators por tab                             | 2h         | ✅     |
+| Definir tema: cores, tipografia, spacing                   | 3h         | ✅     |
+| Configurar suporte a dark/light mode                       | 2h         | ✅     |
+| Verificar build inicial                                    | 1h         | ✅     |
 
 **Entregáveis:** App compila e navega entre tabs.
 
