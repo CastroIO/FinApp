@@ -5,7 +5,6 @@ import {
   View,
   ActivityIndicator,
   PressableProps,
-  ViewStyle,
 } from 'react-native';
 
 interface ButtonProps extends PressableProps {
@@ -17,24 +16,12 @@ interface ButtonProps extends PressableProps {
   children: React.ReactNode;
 }
 
-const variantStyles: Record<string, ViewStyle> = {
-  primary: {
-    backgroundColor: '#3B82F6',
-  },
-  secondary: {
-    backgroundColor: '#27272A',
-  },
-  outline: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#3F3F46',
-  },
-  ghost: {
-    backgroundColor: 'transparent',
-  },
-  danger: {
-    backgroundColor: '#EF4444',
-  },
+const variantStyles: Record<string, string> = {
+  primary: 'bg-primary',
+  secondary: 'bg-background-tertiary',
+  outline: 'bg-transparent border border-border-light',
+  ghost: 'bg-transparent',
+  danger: 'bg-expense',
 };
 
 const variantTextStyles: Record<string, string> = {
@@ -45,29 +32,17 @@ const variantTextStyles: Record<string, string> = {
   danger: 'text-white',
 };
 
-const sizeStyles: Record<string, { container: ViewStyle; text: string }> = {
+const sizeStyles: Record<string, { container: string; text: string }> = {
   sm: {
-    container: {
-      paddingHorizontal: 12,
-      paddingVertical: 8,
-      borderRadius: 6,
-    },
+    container: 'px-3 py-2 rounded-md',
     text: 'text-sm',
   },
   md: {
-    container: {
-      paddingHorizontal: 16,
-      paddingVertical: 12,
-      borderRadius: 8,
-    },
+    container: 'px-4 py-3 rounded-lg',
     text: 'text-base',
   },
   lg: {
-    container: {
-      paddingHorizontal: 24,
-      paddingVertical: 16,
-      borderRadius: 10,
-    },
+    container: 'px-6 py-4 rounded-xl',
     text: 'text-lg',
   },
 };
@@ -92,8 +67,7 @@ export const Button = forwardRef<View, ButtonProps>(
     return (
       <Pressable
         ref={ref}
-        className={`flex-row items-center justify-center ${isDisabled ? 'opacity-50' : ''} ${className || ''}`}
-        style={[variantStyles[variant], sizeStyles[size].container]}
+        className={`flex-row items-center justify-center ${variantStyles[variant]} ${sizeStyles[size].container} ${isDisabled ? 'opacity-50' : ''} ${className || ''}`}
         disabled={isDisabled}
         {...props}
       >

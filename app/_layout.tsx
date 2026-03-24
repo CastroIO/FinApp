@@ -52,6 +52,13 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" options={{ title: 'FinApp' }} />
+        <Stack.Screen
+          name="demo/index"
+          options={{
+            title: 'Componentes',
+            headerShown: false,
+          }}
+        />
       </Stack>
     </SafeAreaProvider>
   );

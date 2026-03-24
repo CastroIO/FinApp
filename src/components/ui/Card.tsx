@@ -1,4 +1,4 @@
-import { View, Text, ViewProps } from 'react-native';
+import { View, Text, ViewProps, Platform } from 'react-native';
 
 interface CardProps extends ViewProps {
   variant?: 'default' | 'elevated' | 'outlined';
@@ -18,11 +18,26 @@ const variantStyles: Record<string, string> = {
   outlined: 'bg-background-secondary border border-border',
 };
 
+// Sombra para variante elevated
+const elevatedShadow = Platform.select({
+  ios: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+  },
+  android: {
+    elevation: 8,
+  },
+  default: {},
+});
+
 export function Card({
   variant = 'default',
   padding = 'md',
   children,
   className,
+  style,
   ...props
 }: CardProps) {
   const roundedClass = 'rounded-xl';
@@ -30,6 +45,7 @@ export function Card({
   return (
     <View
       className={`${variantStyles[variant]} ${paddingStyles[padding]} ${roundedClass} ${className || ''}`}
+      style={variant === 'elevated' ? [elevatedShadow, style] : style}
       {...props}
     >
       {children}

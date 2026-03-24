@@ -50,5 +50,5 @@ export function Text({
   );
 }
 
-// Export default RN Text for convenience
-export { RNText as RawText };
+// Export default RN Text for convenience (use when you need unstyled native text)
+export { RNText as NativeText };
