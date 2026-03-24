@@ -4,11 +4,16 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
 import { ThemeContext, LightTheme, DarkTheme } from '../shared/hooks';
 import { useSystemColorScheme } from '../shared/hooks';
-import TabsLayout from './(tabs)/_layout';
 
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts({
+    Inter:
+      'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2',
+  });
+
   const systemScheme = useSystemColorScheme();
   const [isDark, setIsDark] = useState(systemScheme === 'dark');
 
@@ -17,6 +22,10 @@ export default function RootLayout() {
   }, [systemScheme]);
 
   const theme = isDark ? DarkTheme : LightTheme;
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

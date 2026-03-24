@@ -24,40 +24,49 @@ export const lineHeights = {
   relaxed: 1.75,
 } as const;
 
+export const fontFamily = 'Inter';
+
 export const typography = {
   h1: {
     fontSize: fontSizes['3xl'],
     fontWeight: fontWeights.bold,
     lineHeight: fontSizes['3xl'] * lineHeights.tight,
+    fontFamily,
   } as TextStyle,
   h2: {
     fontSize: fontSizes['2xl'],
     fontWeight: fontWeights.semibold,
     lineHeight: fontSizes['2xl'] * lineHeights.tight,
+    fontFamily,
   } as TextStyle,
   h3: {
     fontSize: fontSizes.xl,
     fontWeight: fontWeights.semibold,
     lineHeight: fontSizes.xl * lineHeights.tight,
+    fontFamily,
   } as TextStyle,
   body: {
     fontSize: fontSizes.base,
     fontWeight: fontWeights.normal,
     lineHeight: fontSizes.base * lineHeights.normal,
+    fontFamily,
   } as TextStyle,
   bodySmall: {
     fontSize: fontSizes.sm,
     fontWeight: fontWeights.normal,
     lineHeight: fontSizes.sm * lineHeights.normal,
+    fontFamily,
   } as TextStyle,
   caption: {
     fontSize: fontSizes.xs,
     fontWeight: fontWeights.normal,
     lineHeight: fontSizes.xs * lineHeights.normal,
+    fontFamily,
   } as TextStyle,
   button: {
     fontSize: fontSizes.base,
     fontWeight: fontWeights.semibold,
     lineHeight: fontSizes.base * lineHeights.tight,
+    fontFamily,
   } as TextStyle,
 };
