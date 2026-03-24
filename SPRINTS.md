@@ -4,18 +4,18 @@
 
 ---
 
-## Sprint 1 — Setup e Fundação
+## Sprint 1 — Setup e Fundação ✅ CONCLUÍDO
 
 | # | Tarefa | Resultado | Status |
 |---|--------|-----------|--------|
-| 1.1 | Inicializar projeto Expo (TypeScript) | Projeto Expo a correr | ⬜ |
-| 1.2 | Instalar e configurar Nativewind | Tailwind a funcionar em RN | ⬜ |
-| 1.3 | Definir tema dark (colors, typography) | Arquivo `theme/` pronto | ⬜ |
-| 1.4 | Criar estrutura de pastas | `src/store/`, `src/database/`, etc. | ⬜ |
-| 1.5 | Definir tipos TypeScript (Account, Transaction, Category, Budget, RecurringTransaction) | `src/types/` | ⬜ |
-| 1.6 | Configurar expo-sqlite + migrações | BD inicializada | ⬜ |
-| 1.7 | Criar seeds (categorias predefinidas em inglês) | Categorias populadas | ⬜ |
-| 1.8 | Copiar componentes base do NativeUI (Button, Card, Input, Badge) | `src/components/ui/` | ⬜ |
+| 1.1 | Inicializar projeto Expo (TypeScript) | Projeto Expo a correr | ✅ |
+| 1.2 | Instalar e configurar Nativewind | Tailwind a funcionar em RN | ✅ |
+| 1.3 | Definir tema dark (colors, typography) | Arquivo `theme/` pronto | ✅ |
+| 1.4 | Criar estrutura de pastas | `src/store/`, `src/database/`, etc. | ✅ |
+| 1.5 | Definir tipos TypeScript (Account, Transaction, Category, Budget, RecurringTransaction) | `src/types/` | ✅ |
+| 1.6 | Configurar expo-sqlite + migrações | BD inicializada | ✅ |
+| 1.7 | Criar seeds (categorias predefinidas em inglês) | Categorias populadas | ✅ |
+| 1.8 | Copiar componentes base do NativeUI (Button, Card, Input, Badge) | `src/components/ui/` | ✅ |
 
 ---
 
@@ -129,19 +129,19 @@
 
 ## Resumo
 
-| Sprint | Foco | Tarefas |
-|--------|------|---------|
-| 1 | Fundação | 8 |
-| 2 | Contas | 6 |
-| 3 | Transações | 8 |
-| 4 | Dashboard | 6 |
-| 5 | Transferências | 3 |
-| 6 | Backup | 4 |
-| 7 | Onboarding | 3 |
-| 8 | Orçamentos | 5 |
-| 9 | Recorrentes | 5 |
-| 10 | Polimento | 5 |
-| **Total** | | **53 tarefas** |
+| Sprint | Foco | Tarefas | Status |
+|--------|------|---------|--------|
+| 1 | Fundação | 8 | ✅ Concluído |
+| 2 | Contas | 6 | ⬜ Por fazer |
+| 3 | Transações | 8 | ⬜ Por fazer |
+| 4 | Dashboard | 6 | ⬜ Por fazer |
+| 5 | Transferências | 3 | ⬜ Por fazer |
+| 6 | Backup | 4 | ⬜ Por fazer |
+| 7 | Onboarding | 3 | ⬜ Por fazer |
+| 8 | Orçamentos | 5 | ⬜ Por fazer |
+| 9 | Recorrentes | 5 | ⬜ Por fazer |
+| 10 | Polimento | 5 | ⬜ Por fazer |
+| **Total** | | **53 tarefas** | **1/10 sprints** |
 
 ---
 
